@@ -5,7 +5,8 @@ This is a reference environment showing how CoreOS and Docker can be set up in a
 #### System Diagram and Components
 tbd
 
-#### Environment Setup
+### Environment Setup
+=====================
 1. Install [Vagrant](https://www.vagrantup.com/downloads.html) and either [VirtualBox](https://www.virtualbox.org) or [VmWare Fusion](http://www.vmware.com/products/fusion)
 2. Install CoreOS tools for Fleet and Etcd  
     		
@@ -46,21 +47,25 @@ tbd
 6. Set fleetctl tunnel environment variable to manage cluster: `FLEETCTL_TUNNEL=127.0.0.1:4001`
 7. Use fleetctl to check for machines in cluster `fleetctl list-machines`
 
-#### Usage
+### Usage
+==========
 There are several use cases represented with this demo using Fleetctl and systemd:
 * Starting a container remotely
 * Building and pushing a container to a private registry
-* Starting a container from the public docker registry
+* Creating a container using systemd
 
-##### Starting a container
+
+#### 1. Starting a container
 Once you have the environment setup you can use the fleetctl client to push systemd .service files to the cluster. Fleet is a distributed init system that sits on top of etcd and systemd to make intraction with the cluster easier. There are several systemd unit files located in the [services/](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/services) directory. Start by using fleetctl to push `dillinger.service` to the cluster. 
 ```bash
 $ fleetctl submit services/dillinger.service
 # You can view the files sent to fleet with the fleetctl list-units command
 $ fleetctl start dillinger.service
-```
+``` 
+If you run the command `fleetctl journal dillinger.service` you can see the logs from the container and if you navigate in your browser to the ip address of the node that the service was started on at port 3000(`192.168.2.<replace>:3000`), you will see that dillinger is running. 
 
-#####
+#### 2. Pushing a Container to private registry
+#### 3. Creating a container with systemd
 
 #### Notes
 * CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
