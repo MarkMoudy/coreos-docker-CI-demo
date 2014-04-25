@@ -1,0 +1,11 @@
+[Unit]
+Description=Jenkins Docker Service
+Requires=docker.service
+After=docker.service
+After=etcd.service
+
+[Service]
+ExecStart=/usr/bin/docker run -p 80:8080 192.168.2.90:5000/moudy/jenkins
+ExecStartPost=/usr/bin/etcdctl set /cidemo/%p/%H:%i running
+ExecStop=/usr/bin/docker stop 192.168.2.90:5000/moudy/jenkins
+ExecStopPost=/usr/bin/etcdctl rm /cidemo/%p/%H:%i 
