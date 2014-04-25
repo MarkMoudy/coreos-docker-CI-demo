@@ -1,21 +1,11 @@
 ##CoreOS + Docker Continuous Integration Demo
----------------------------------------------
 
-### Objective
-Create a reference demo showing how Continuous Integration can be done using CoreOS and Docker.  
+This is a reference environment showing how CoreOS and Docker can be set up in a local environment.  
 
-### Tools Used
-* Docker
-* CoreOS
-* Phusion baseimage - Container base ubuntu image
-* fig?
-* Jenkins or Apache Continuum for CI build server 
-* Vagrant - for Dev Environment
-
-### System Diagram and Components
+#### System Diagram and Components
 tbd
 
-### Environment Setup
+#### Environment Setup
 1. Install [Vagrant](https://www.vagrantup.com/downloads.html) and either [VirtualBox](https://www.virtualbox.org) or [VmWare Fusion](http://www.vmware.com/products/fusion)
 2. Install CoreOS tools for Fleet and Etcd  
     		
@@ -56,15 +46,31 @@ tbd
 6. Set fleetctl tunnel environment variable to manage cluster: `FLEETCTL_TUNNEL=127.0.0.1:4001`
 7. Use fleetctl to check for machines in cluster `fleetctl list-machines`
 
-### Notes
-* CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders . [fix here](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
+#### Usage
+There are several use cases represented with this demo using Fleetctl and systemd:
+* Starting a container remotely
+* Building and pushing a container to a private registry
+* Starting a container from the public docker registry
 
-### Tips and Tricks
+##### Starting a container
+Once you have the environment setup you can use the fleetctl client to push systemd .service files to the cluster. Fleet is a distributed init system that sits on top of etcd and systemd to make intraction with the cluster easier. There are several systemd unit files located in the [services/](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/services) directory. Start by using fleetctl to push `dillinger.service` to the cluster. 
+```bash
+$ fleetctl submit services/dillinger.service
+# You can view the files sent to fleet with the fleetctl list-units command
+$ fleetctl start dillinger.service
+```
+
+#####
+
+#### Notes
+* CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
+
+#### Tips and Tricks
 
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
 * Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
 
-###Links to Documentation
+#### Useful Documentation
 * [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
 * [fleetctl - Using the client](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
 
