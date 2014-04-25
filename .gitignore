@@ -1,3 +1,7 @@
+## App Specific
+config/vendor/coreos-vagrant/user-data
+
+
 # Created by http://www.gitignore.io
 
 ### OSX ###
@@ -6,7 +10,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
