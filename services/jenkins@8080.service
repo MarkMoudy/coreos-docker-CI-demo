@@ -2,7 +2,7 @@
 Description=Jenkins Docker Service
 Requires=docker.service
 After=docker.service
-After=etcd.service
+After=etcdctl.service
 
 [Service]
 ExecStart=/usr/bin/docker run -p 80:8080 192.168.2.90:5000/moudy/jenkins
