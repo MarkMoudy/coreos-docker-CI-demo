@@ -1,4 +1,5 @@
-#CoreOS + Docker Continuous Integration Demo
+##CoreOS + Docker Continuous Integration Demo
+---------------------------------------------
 
 ### Objective
 Create a reference demo showing how Continuous Integration can be done using CoreOS and Docker.  
@@ -31,7 +32,7 @@ tbd
     $ etcdctl -v
     $ fleetctl -v
     ``` 
-3. Clone repo and CD to directory
+3. Clone repo and CD to directory: `git clone https://github.com/MarkMoudy/coreos-docker-CI-demo.git && cd coreos-docker-CI-demo`
 4. Generate new etcd cluster discovery token(**IMPORTANT** You must do this everytime you bring up a fresh cluster):
 
     ```bash
@@ -55,14 +56,15 @@ tbd
 6. Set fleetctl tunnel environment variable to manage cluster: `FLEETCTL_TUNNEL=127.0.0.1:4001`
 7. Use fleetctl to check for machines in cluster `fleetctl list-machines`
 
-###Links to Documentation
-* [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
-* [fleetctl - Using the client](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
+### Notes
+* CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders . [fix here](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
 
 ### Tips and Tricks
 
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
 * Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
 
-
+###Links to Documentation
+* [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
+* [fleetctl - Using the client](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
 
