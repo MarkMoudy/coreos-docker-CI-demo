@@ -6,7 +6,6 @@ This is a reference environment showing how CoreOS and Docker can be set up in a
 tbd
 
 ### Environment Setup
-=====================
 1. Install [Vagrant](https://www.vagrantup.com/downloads.html) and either [VirtualBox](https://www.virtualbox.org) or [VmWare Fusion](http://www.vmware.com/products/fusion)
 2. Install CoreOS tools for Fleet and Etcd  
     		
@@ -48,7 +47,6 @@ tbd
 7. Use fleetctl to check for machines in cluster `fleetctl list-machines`
 
 ### Usage
-==========
 There are several use cases represented with this demo using Fleetctl and systemd:
 * Starting a container remotely
 * Building and pushing a container to a private registry
@@ -65,7 +63,25 @@ $ fleetctl start dillinger.service
 If you run the command `fleetctl journal dillinger.service` you can see the logs from the container and if you navigate in your browser to the ip address of the node that the service was started on at port 3000(`192.168.2.<replace>:3000`), you will see that dillinger is running. 
 
 #### 2. Pushing a Container to private registry
+I have set up a private docker registry running at 192.168.2.90 which should come up when you start the cluster. An important piece of pushing images to a private registry is that you have to tag the Docker image with the ip and port. If you look in the [init-build.sh](https://github.com/MarkMoudy/coreos-docker-CI-demo/blob/master/Dockerfiles/init-build.sh) script you can see the commands to build a jenkins container image from a Dockerfile. 
+
 #### 3. Creating a container with systemd
+Etcd uses [systemd unit files](https://coreos.com/docs/launching-containers/launching/getting-started-with-systemd) to define the service that you are launching. Below is an example of how this would work for the Jenkins container image: 
+```
+[Unit]
+Description=Jenkins Docker Service
+Requires=docker.service
+After=docker.service
+After=etcdctl.service
+
+[Service]
+ExecStart=/usr/bin/docker run -p 80:8080 192.168.2.90:5000/moudy/jenkins
+ExecStartPost=/usr/bin/etcdctl set /cidemo/%p/%H:%i running
+ExecStop=/usr/bin/docker stop 192.168.2.90:5000/moudy/jenkins
+ExecStopPost=/usr/bin/etcdctl rm /cidemo/%p/%H:%i 
+```
+
+`ExecStartPost` - this sets the key/value of the service to etcd and is using modifiers to fill in the path. [More Info](https://coreos.com/docs/launching-containers/launching/getting-started-with-systemd/#advanced-unit-files)
 
 #### Notes
 * CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
