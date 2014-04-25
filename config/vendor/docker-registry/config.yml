@@ -1,0 +1,108 @@
+# The `common' part is automatically included (and possibly overriden by all
+# other flavors)
+common:
+    # Bucket for storage
+    # boto_bucket: REPLACEME
+
+    # Amazon S3 Storage Configuration
+    # s3_access_key: REPLACEME
+    # s3_secret_key: REPLACEME
+    # s3_bucket: REPLACEME
+    # s3_encrypt: REPLACEME
+    # s3_secure: REPLACEME
+
+    # Google Cloud Storage Configuration
+    # See:
+    # https://developers.google.com/storage/docs/reference/v1/getting-startedv1#keys
+    # for details on access and secret keys.
+    # gs_access_key: REPLACEME
+    # gs_secret_key: REPLACEME
+    # gs_secure: REPLACEME
+
+    # OAuth 2.0 authentication with the storage.
+    # Supported for Google Cloud Storage only.
+    # oauth2 can be set to true or false. If it is set to true, gs_access_key,
+    # gs_secret_key and gs_secure are not needed.
+    # Client ID and Client Secret must be set into OAUTH2_CLIENT_ID and
+    # OAUTH2_CLIENT_SECRET environment variables.
+    # See: https://developers.google.com/accounts/docs/OAuth2.
+    # oauth2: REPLACEME
+
+    # Let gunicorn set this environment variable or set a random string here
+    secret_key: _env:SECRET_KEY
+
+    search_backend: "_env:SEARCH_BACKEND:"
+    sqlalchemy_index_database:
+        "_env:SQLALCHEMY_INDEX_DATABASE:sqlite:////tmp/docker-registry.db"
+
+
+# This is the default configuration when no flavor is specified
+dev:
+    storage: local
+    storage_path: /tmp/registry
+    loglevel: debug
+
+# To specify another flavor, set the environment variable SETTINGS_FLAVOR
+# $ export SETTINGS_FLAVOR=prod
+# prod:
+#     storage: s3
+#     storage_path: "_env:STORAGE_PATH:/prod"
+#     # Enabling LRU cache for small files. This speeds up read/write on small files
+#     # when using a remote storage backend (like S3).
+#     cache:
+#         host: _env:CACHE_REDIS_HOST
+#         port: _env:CACHE_REDIS_PORT
+#         password: _env:CACHE_REDIS_PASSWORD
+#     cache_lru:
+#         host: _env:CACHE_LRU_REDIS_HOST
+#         port: _env:CACHE_LRU_REDIS_PORT
+#         password: _env:CACHE_LRU_REDIS_PASSWORD
+#     # Enabling these options makes the Registry send an email on each code Exception
+#     email_exceptions:
+#         smtp_host: REPLACEME
+#         smtp_port: 25
+#         smtp_login: REPLACEME
+#         smtp_password: REPLACEME
+#         smtp_secure: false
+#         from_addr: docker-registry@localdomain.local
+#         to_addr: noise+dockerregistry@localdomain.local
+#     # Enable bugsnag (set the API key)
+#     bugsnag: REPLACEME
+
+# # This flavor is automatically used by unit tests
+# test:
+#     storage: local
+#     storage_path: /tmp/test
+
+# # This flavor is for storing images in Openstack Swift
+# swift:
+#     storage: swift
+#     storage_path: /registry
+#     swift_authurl: _env:OS_AUTH_URL
+#     swift_container: _env:OS_CONTAINER
+#     swift_user: _env:OS_USERNAME
+#     swift_password: _env:OS_PASSWORD
+#     swift_tenant_name: _env:OS_TENANT_NAME
+#     swift_region_name: _env:OS_REGION_NAME
+
+# # This flavor stores the images in Glance (to integrate with openstack)
+# # See also: https://github.com/dotcloud/openstack-docker
+# openstack:
+#     storage: glance
+#     storage_alternate: local
+#     storage_path: /tmp/registry
+#     loglevel: debug
+
+# # This flavor stores the images in Glance (to integrate with openstack)
+# # and tags in Swift. 
+# openstack-swift:
+#     storage: glance
+#     storage_path: /registry
+#     storage_alternate: swift
+#     # keystone authorization
+#     swift_authurl: REPLACEME
+#     swift_container: REPLACEME
+#     swift_user: REPLACEME
+#     swift_password: REPLACEME
+#     swift_tenant_name: REPLACEME
+#     swift_region_name: REPLACEME

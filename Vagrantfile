@@ -86,4 +86,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     end
   end
+    ## Setup Docker Registry VM
+  config.vm.define "docker_registry" do |docker_registry|
+    docker_registry.vm.hostname = "docker-registry"
+    docker_registry.vm.network :private_network, ip: "192.168.2.90"
+    docker_registry.vm.synced_folder ".", "/home/core/share", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+    docker_registry.vm.provision "shell",
+     path: "vagrant-registry.sh"
+  end
 end

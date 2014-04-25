@@ -2,23 +2,12 @@
 # DOCKER_VERSION	0.10.0
 # DESCRIPTION			Docker Registry for hosting Docker images
 # OTHER_INFO			See https://github.com/dotcloud/docker-registry/
-# TO_BUILD				docker build -rm -t registry .
-# TO_RUN					docker run -p 5000:5000 registry
+# TO_BUILD				docker build --rm -t 192.168.2.90:5000/moudy/registry .
+# TO_RUN					docker run -p 5000:5000 -v /home/core/share/config/vendor/docker-registry:/registry-conf -e DOCKER_REGISTRY_CONFIG=/registry-conf/config.yml 192.168.2.90:5000/moudy/registry
 
 
-FROM phusion/baseimage:0.9.9
+FROM ubuntu:13.10
 MAINTAINER Mark Moudy "mark.moudy@ericsson.com"
-
-# Set correct environment variables
-ENV HOME /root
-
-# Regenerate SSH host keys. baseimage-docker does not contain any, so you
-# have to do that yourself. You may also comment out this instruction; the
-# init system will auto-generate one during boot.
-RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
-
-# Use baseimage-docker's init system.
-CMD ["/sbin/my_init"]
 
 RUN apt-get update; \
 		apt-get install -y git-core build-essential python-dev \
@@ -28,9 +17,8 @@ RUN cd /tmp; wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.p
 RUN cd /tmp; python ez_setup.py; easy_install pip; \
     rm ez_setup.py
 
-RUN git clone https://github.com/dotcloud/docker-registry.git
-#ADD . /docker-registry
-ADD /docker-registry/config/boto.cfg /etc/boto.cfg
+RUN git clone --depth=50 git://github.com/dotcloud/docker-registry.git /docker-registry;  \
+		cd /docker-registry; cp ./config/boto.cfg /etc/boto.cfg
 
 RUN pip install /docker-registry/
 
