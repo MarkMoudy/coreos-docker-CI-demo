@@ -32,7 +32,7 @@ $ fleetctl -v
 
 ```
 3. Clone repo and CD to directory  
-4. Generate new etcd cluster discovery token: 
+4. Generate new etcd cluster discovery token(**IMPORTANT** You must do this everytime you bring up a fresh cluster): 
 ```Bash
 $ cp config/vendor/coreos-vagrant/user-data.sample config/vendor/coreos-vagrant/user-data && DISCOVERY_TOKEN=`curl -s https://discovery.etcd.io/new` && perl -p -e "s@#discovery: https://discovery.etcd.io/<token>@discovery: $DISCOVERY_TOKEN@g" config/vendor/coreos-vagrant/user-data.sample > config/vendor/coreos-vagrant/user-data
 ```
