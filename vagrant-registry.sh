@@ -1,4 +1,4 @@
-
+## Vagrant shell provisioner to build the Docker Private Registry image and start the registry 
 ## Set up useful Docker alias commands 
 echo "alias dl='docker ps -l -q'"
 echo "alias cdel='docker rm $(docker ps -a -q)'" 

@@ -1,4 +1,4 @@
-# VERSION 0.1
+# VERSION 				0.1
 # DOCKER_VERSION	0.10.0
 # DESCRIPTION			Docker Registry for hosting Docker images
 # OTHER_INFO			See https://github.com/dotcloud/docker-registry/
