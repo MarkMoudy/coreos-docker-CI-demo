@@ -1,0 +1,8 @@
+[Unit]
+Description=CI Demo build images Service
+Requires=docker.service
+After=docker.service
+After=etcdctl.service
+
+[Service]
+ExecStart=/bin/bash ./home/core/share/Dockerfiles/init-build.sh
