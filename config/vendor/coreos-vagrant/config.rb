@@ -5,11 +5,11 @@
 # after the equals sign..
 
 # Size of the CoreOS cluster created by Vagrant
-$num_instances=1
+$num_instances=3
 
 # Log the serial consoles of CoreOS VMs to log/
 # Enable by setting value to true, disable with false
-#$enable_serial_logging=false
+$enable_serial_logging=false
 
 # Setting for VirtualBox VMs
 $vb_gui = false

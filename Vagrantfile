@@ -8,11 +8,11 @@ CLOUD_CONFIG_PATH = "./config/vendor/coreos-vagrant/user-data"
 CONFIG= "./config/vendor/coreos-vagrant/config.rb"
 
 # Defaults for config options defined in CONFIG
-$num_instances = 1
-$enable_serial_logging = false
-$vb_gui = false
-$vb_memory = 1024
-$vb_cpus = 1
+# $num_instances = 3
+# $enable_serial_logging = false
+# $vb_gui = false
+# $vb_memory = 1024
+# $vb_cpus = 1
 
 # Attempt to apply the deprecated environment variable NUM_INSTANCES to
 # $num_instances while allowing config.rb to override it
@@ -43,22 +43,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vbguest.auto_update = false
   end
 
-#  config.vm.define "shipyard" do |shipyard| 
-#    shipyard.vm.box     = "phusion-open-ubuntu-12.04-amd64"
-#    shipyard.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/ubuntu-12.04.3-amd64-vbox.box"
-#    shipyard.vm.hostname = "shipyard.docker-moudy.com"
-#    shipyard.vm.network "private_network", ip: "192.168.1.99"
-#    if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*/id").empty?
-#      # Install Docker
-#      pkg_cmd = "wget -q -O - https://get.docker.io/gpg | apt-key add -;" \
-#        "echo deb http://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list;" \
-#        "apt-get update -qq; apt-get install -q -y --force-yes lxc-docker; "
-#      # Add vagrant user to the docker group
-#      pkg_cmd << "usermod -a -G docker vagrant; "
-#      shipyard.vm.provision :shell, :inline => pkg_cmd
-#    end
-#  end
-
   (1..$num_instances).each do |i|
     config.vm.define vm_name = "core-%02d" % i do |config|
       config.vm.hostname = vm_name
@@ -88,12 +72,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.memory = $vb_memory
         vb.cpus = $vb_cpus
       end
-
-      ip = "192.168.1.#{i+100}"
+      config.vm.network "forwarded_port", guest: 4001, host: "400#{i}".to_i
+      ip = "192.168.2.#{i+100}"
       config.vm.network :private_network, ip: ip
 
       # Uncomment below to enable NFS for sharing the host machine into the coreos-vagrant VM.
-      config.vm.synced_folder "sync_share/", "/home/core/share", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+      config.vm.synced_folder ".", "/home/core/share", id: "core", :nfs => true, :mount_options => ['nolock,vers=3,udp']
 
       if File.exist?(CLOUD_CONFIG_PATH)
         config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
