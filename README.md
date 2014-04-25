@@ -15,7 +15,7 @@ Create a reference demo showing how Continuous Integration can be done using Cor
 tbd
 
 ### Environment Setup
-1. Install [Vagrant][https://www.vagrantup.com/downloads.html] and either [VirtualBox][https://www.virtualbox.org] or VmWare Fusion[]  
+1. Install [Vagrant][https://www.vagrantup.com/downloads.html] and either [VirtualBox][https://www.virtualbox.org] or VmWare Fusion[http://www.vmware.com/products/fusion]  
 2. Install CoreOS tools for Fleet and Etcd
 ```bash
 ## Install etcdctl
@@ -31,11 +31,11 @@ $ etcdctl -v
 $ fleetctl -v
 ```
 3. Clone repo and CD to directory
-4. Generate new etcd cluster discovery token(**IMPORTANT** You must do this everytime you bring up a fresh cluster):
+4. Generate new etcd cluster discovery token(**IMPORTANT** You must do this everytime you bring up a fresh cluster) or run `./preinstall.sh`:
 ```bash
 $ cp config/vendor/coreos-vagrant/user-data.sample config/vendor/coreos-vagrant/user-data && DISCOVERY_TOKEN=`curl -s https://discovery.etcd.io/new` && perl -p -e "s@#discovery: https://discovery.etcd.io/<token>@discovery: $DISCOVERY_TOKEN@g" config/vendor/coreos-vagrant/user-data.sample > config/vendor/coreos-vagrant/user-data
 ```
-5. Bring up Cluster using Vagrant with either the VirtualBox or VmWare Fusion Provider:
+5. Bring up Cluster using Vagrant with either the VirtualBox or VmWare Fusion Provider:(you will have to enter your password for the NFS Shared folders)
 ```bash
 ## Using VirtualBox
 $ vagrant up
@@ -55,7 +55,7 @@ $ `FLEETCTL_TUNNEL=127.0.0.1:4001`
 ### Tips and Tricks
 
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
-* Docker - Delete all stopped containers: `docker rm $(docker ps -a -q)`
+* Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
 
 
 
