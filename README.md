@@ -87,7 +87,18 @@ ExecStopPost=/usr/bin/etcdctl rm /cidemo/%p/%H:%i
 Ambassadors are containers who's sole purpose is to help connect containers across multiple hosts. The goal here is to use ambassadors to register into etcd for us. Using CenturyLink etcd ambassador container for simplicity. 
 
 ### etcd, systemd, and Fleet
-You can use [sidekick systemd unit files](http://coreos.com/docs/launching-containers/launching/launching-containers-fleet/#run-a-simple-sidekick) to register and de-register services to etcd. Using the Jenkins service as an example, there are two files to inspect `jenkins@8080.1.service` and `jenkins-discovery.1.service`. jenkins-discovery.1.service announces the jenkins service to etcd and removes the key after stopping. 
+You can use [sidekick systemd unit files](http://coreos.com/docs/launching-containers/launching/launching-containers-fleet/#run-a-simple-sidekick) to register and de-register services to etcd. Using the Jenkins service as an example, there are two files to inspect `jenkins@8080.1.service` and `jenkins-discovery.1.service`. jenkins-discovery.1.service announces the jenkins service to etcd and removes the key after stopping. Use fleet to start `jenkins@8080.1.service` and `jenkins-discovery.1.service`. Then check etcd with `etcdctl ls --recursive` and you should see something like: 
+```bash
+$ etcdctl ls --recursive
+/services
+/services/ci
+/services/ci/jenkins1
+```
+Then get the contents of the key with `etcdctl get /services/ci/jenkins1` and you should see: 
+```bash
+etcdctl get /services/ci/jenkins1
+{ "host": "core-02", "port": "80" }
+```
 
 #### Notes
 * CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
