@@ -94,9 +94,10 @@ $ etcdctl ls --recursive
 /services/ci
 /services/ci/jenkins1
 ```
-Then get the contents of the key with `etcdctl get /services/ci/jenkins1` and you should see: 
+Then get the contents of the key with `fleetctl ssh <machine_id> etcdctl get /services/ci/jenkins1` and you should see: 
 ```bash
-etcdctl get /services/ci/jenkins1
+# replace f49b7ee7 with any one of your <machine_ids> found with fleetctl list-machines(they should all return the same values)
+etcdctl get f49b7ee7 /services/ci/jenkins1
 { "host": "core-02", "port": "80" }
 ```
 
@@ -108,7 +109,9 @@ etcdctl get /services/ci/jenkins1
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
 * Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
 
+
 #### Useful Documentation
 * [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
-* [fleetctl - Using the client](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
+* [fleetctl - Using the client - good list of commands](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
+* [etcd - Strategies for dealing with stale data in etcd](http://stackoverflow.com/questions/21597039/how-to-deal-with-stale-data-when-doing-service-discovery-with-etcd-on-coreos#answer-21611128)
 
