@@ -108,10 +108,12 @@ etcdctl get f49b7ee7 /services/ci/jenkins1
 
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
 * Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
+* set both `alias dl='docker ps -l -q'; alias cdel='docker rm $(docker ps -a -q)'`
 
 
 #### Useful Documentation
 * [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
 * [fleetctl - Using the client - good list of commands](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
 * [etcd - Strategies for dealing with stale data in etcd](http://stackoverflow.com/questions/21597039/how-to-deal-with-stale-data-when-doing-service-discovery-with-etcd-on-coreos#answer-21611128)
+* [Customizing Docket - Docker Daemon Sockets systemd tips](http://coreos.com/docs/launching-containers/building/customizing-docker/)
 

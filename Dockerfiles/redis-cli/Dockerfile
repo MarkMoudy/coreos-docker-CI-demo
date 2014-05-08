@@ -9,4 +9,4 @@ FROM 192.168.2.90:5000/moudy/redis
 MAINTAINER Mark Moudy "mark.moudy@ericsson.com"
 
 EXPOSE 6380
-CMD /usr/local/bin/redis-cli -h $REDIS_SERVER_PORT_6379_TCP_ADDR
+CMD /usr/local/bin/redis-cli -h $REDIS_PORT_6379_TCP_ADDR

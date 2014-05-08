@@ -41,6 +41,7 @@ dev:
     storage: local
     storage_path: /tmp/registry
     loglevel: debug
+    standalone: true
 
 # To specify another flavor, set the environment variable SETTINGS_FLAVOR
 # $ export SETTINGS_FLAVOR=prod
