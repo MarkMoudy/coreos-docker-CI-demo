@@ -6,8 +6,8 @@ This is a reference environment showing how CoreOS and Docker can be set up in a
 tbd
 
 ### Environment Setup
-1. Install [Vagrant](https://www.vagrantup.com/downloads.html) and either [VirtualBox](https://www.virtualbox.org) or [VmWare Fusion](http://www.vmware.com/products/fusion)
-2. Install CoreOS tools for Fleet and Etcd  
+1. Install [Vagrant 1.5.4+](https://www.vagrantup.com/downloads.html) and either [VirtualBox 4.3.10+](https://www.virtualbox.org) or [VMware Fusion 5.0.4+](http://www.vmware.com/products/fusion) - for VMware you must purchase a license for the [Vagrant Vmware provider plugin](http://www.vagrantup.com/vmware) ~$79.00
+2. Install CoreOS host tools for Fleet and Etcd  
     		
     ```bash
     ## Install etcdctl
@@ -84,7 +84,7 @@ ExecStopPost=/usr/bin/etcdctl rm /cidemo/%p/%H:%i
 `ExecStartPost` - this sets the key/value of the service to etcd and is using modifiers to fill in the path. [More Info](https://coreos.com/docs/launching-containers/launching/getting-started-with-systemd/#advanced-unit-files)
 
 ### Ambassadors
-Ambassadors are containers who's sole purpose is to help connect containers across multiple hosts. The goal here is to use ambassadors to register into etcd for us. Using CenturyLink etcd ambassador container for simplicity. 
+Ambassadors are containers who's sole purpose is to help connect containers across multiple hosts. See Redis-demo service files for an example.
 
 ### etcd, systemd, and Fleet
 You can use [sidekick systemd unit files](http://coreos.com/docs/launching-containers/launching/launching-containers-fleet/#run-a-simple-sidekick) to register and de-register services to etcd. Using the Jenkins service as an example, there are two files to inspect `jenkins@8080.1.service` and `jenkins-discovery.1.service`. jenkins-discovery.1.service announces the jenkins service to etcd and removes the key after stopping. Use fleet to start `jenkins@8080.1.service` and `jenkins-discovery.1.service`. Then check etcd with `etcdctl ls --recursive` and you should see something like: 
