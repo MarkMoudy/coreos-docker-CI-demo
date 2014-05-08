@@ -1,0 +1,7 @@
+[Service]
+# need to forward all traffic it gets on port 10000 to 172.17.42.1:4001
+ExecStart=/usr/bin/docker run --rm --name %n polvi/simple-amb 172.17.42.1:4001
+ExecStop=/usr/bin/docker stop -t 3 %n
+
+[X-Fleet]
+X-Conflicts=redis_server.service
