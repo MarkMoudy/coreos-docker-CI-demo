@@ -46,7 +46,12 @@ tbd
 6. Set fleetctl tunnel environment variable to manage cluster: `FLEETCTL_TUNNEL=127.0.0.1:4001`
 7. Use fleetctl to check for machines in cluster `fleetctl list-machines`
 
-### Usage
+### Examples
+I have included several demo examples for using a CoreOS cluster. 
+* [Deploying Multiple Static Web Services on a CoreOS cluster](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/examples/screencast-demo)
+* [Deploying Redis on CoreOS using Dynamic Ambassadors Demo](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/examples/redis-demo)
+
+### Simple Getting Started Usage
 There are several use cases represented with this demo using Fleetctl and systemd:
 * Starting a container remotely
 * Building and pushing a container to a private registry

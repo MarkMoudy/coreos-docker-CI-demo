@@ -1,4 +1,4 @@
-## Static Web Service CoreOS cluster Demo
+## Deploying Multiple Static Web Services on a CoreOS cluster Demo
 
 ### Overview
 This is a reference demo for the CoreOS development environment showing off some key features of the stack. The main idea is that you are pushing three services running static web servers to your cluster. The three static web services cannot run on the same host so we use the `[X-Fleet]` specifications to eliminate conflicts in the cluster. The demo also shows off how you can kill a host in the cluster and fleet will move the service to another available host if it is available. 
