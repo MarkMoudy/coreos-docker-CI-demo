@@ -1,0 +1,14 @@
+[Unit]
+Description=Static Web 1 Service
+Requires=docker.service
+After=docker.service
+After=etcdctl.service
+
+[Service]
+ExecStart=/usr/bin/docker run --rm --name %n -p 80:8080 192.168.2.90:5000/demo/static-web-1
+ExecStartPost=/usr/bin/etcdctl set /domains/%n/%H running
+ExecStop=/usr/bin/docker stop %n
+ExecStopPost=/usr/bin/etcdctl rm /domains/%n/%H
+
+[X-Fleet]
+X-Conflicts=static-web-*.service
