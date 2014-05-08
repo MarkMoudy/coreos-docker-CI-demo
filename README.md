@@ -3,7 +3,7 @@
 This is a reference environment showing how CoreOS and Docker can be set up in a local environment.  
 
 #### Environment Architecture Diagram 
-![Development Environment Architecture Diagram](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/Documentation/assets/Environment_Overview_Diagram.png)
+![Development Environment Architecture Diagram](https://github.com/MarkMoudy/coreos-docker-CI-demo/blob/master/Documentation/assets/Environment%20Oveview%20Diagram.png)
 
 ### Environment Setup
 1. Install [Vagrant 1.5.4+](https://www.vagrantup.com/downloads.html) and either [VirtualBox 4.3.10+](https://www.virtualbox.org) or [VMware Fusion 5.0.4+](http://www.vmware.com/products/fusion) - for VMware you must purchase a license for the [Vagrant Vmware provider plugin](http://www.vagrantup.com/vmware) ~$79.00
