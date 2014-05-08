@@ -1,4 +1,4 @@
-##CoreOS + Docker Continuous Integration Demo
+##CoreOS + Docker Continuous Development Environment Demo
 
 This is a reference environment showing how CoreOS and Docker can be set up in a local environment.  
 
@@ -115,5 +115,5 @@ etcdctl get f49b7ee7 /services/ci/jenkins1
 * [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
 * [fleetctl - Using the client - good list of commands](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
 * [etcd - Strategies for dealing with stale data in etcd](http://stackoverflow.com/questions/21597039/how-to-deal-with-stale-data-when-doing-service-discovery-with-etcd-on-coreos#answer-21611128)
-* [Customizing Docket - Docker Daemon Sockets systemd tips](http://coreos.com/docs/launching-containers/building/customizing-docker/)
+* [Customizing Docker - Docker Daemon Sockets systemd tips](http://coreos.com/docs/launching-containers/building/customizing-docker/)
 
