@@ -2,17 +2,17 @@
 # # vi: set ft=ruby :
 
 require 'fileutils'
-require_relative './config/vendor/coreos-vagrant/override-plugin.rb'
+# require_relative './config/vendor/coreos-vagrant/override-plugin.rb'
 VAGRANTFILE_API_VERSION = "2"
 CLOUD_CONFIG_PATH = "./config/vendor/coreos-vagrant/user-data"
 CONFIG= "./config/vendor/coreos-vagrant/config.rb"
 
 # Defaults for config options defined in CONFIG
-# $num_instances = 3
-# $enable_serial_logging = false
-# $vb_gui = false
-# $vb_memory = 1024
-# $vb_cpus = 1
+$num_instances = 1
+$enable_serial_logging = false
+$vb_gui = false
+$vb_memory = 1024
+$vb_cpus = 1
 
 # Attempt to apply the deprecated environment variable NUM_INSTANCES to
 # $num_instances while allowing config.rb to override it
@@ -26,17 +26,18 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "coreos-alpha"
-  config.vm.box_url = "http://storage.core-os.net/coreos/amd64-usr/alpha/coreos_production_vagrant.box"
+  config.vm.box_version = ">= 308.0.1"
+  config.vm.box_url = "http://storage.core-os.net/coreos/amd64-usr/alpha/coreos_production_vagrant.json"
 
   config.vm.provider :vmware_fusion do |vb, override|
-    override.vm.box_url = "http://storage.core-os.net/coreos/amd64-usr/alpha/coreos_production_vagrant_vmware_fusion.box"
+    override.vm.box_url = "http://storage.core-os.net/coreos/amd64-usr/alpha/coreos_production_vagrant_vmware_fusion.json"
   end
 
   # Fix docker not being able to resolve private registry in VirtualBox
-  config.vm.provider :virtualbox do |vb, override|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-  end
+  # config.vm.provider :virtualbox do |vb, override|
+  #   vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  #   vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  # end
 
   # plugin conflict
   if Vagrant.has_plugin?("vagrant-vbguest") then
@@ -72,7 +73,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.memory = $vb_memory
         vb.cpus = $vb_cpus
       end
+      # Forward Ports for etcd
       config.vm.network "forwarded_port", guest: 4001, host: "400#{i}".to_i
+      # Expose Port for Docker on local host
+      if $expose_docker_tcp
+        config.vm.network "forwarded_port", guest: 4243, host: $expose_docker_tcp, auto_correct: true
+      end
       ip = "192.168.2.#{i+100}"
       config.vm.network :private_network, ip: ip
 

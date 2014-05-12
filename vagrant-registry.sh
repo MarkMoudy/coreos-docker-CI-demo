@@ -7,4 +7,4 @@ alias cdel='docker rm $(docker ps -a -q)'
 cd /home/core/share/Dockerfiles/Docker-Registry && \
 /usr/bin/docker build --rm -t 192.168.2.90:5000/moudy/registry . && \
 /usr/bin/docker run -d -p 5000:5000 -v /home/core/share/config/vendor/docker-registry:/registry-conf -v /tmp/registry:/tmp/registry -e DOCKER_REGISTRY_CONFIG=/registry-conf/config.yml 192.168.2.90:5000/moudy/registry && \
-echo "Waiting 5 seconds for the Registry to come up";sleep 5s;/usr/bin/docker push 192.168.2.90:5000/moudy/registry
+echo "Waiting for the Registry to come up";sleep 5s;curl -X GET http://192.168.2.90:5000/v1/_ping;/usr/bin/docker push 192.168.2.90:5000/moudy/registry
