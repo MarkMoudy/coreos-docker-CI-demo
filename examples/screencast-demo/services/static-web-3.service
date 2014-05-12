@@ -7,7 +7,7 @@ After=etcdctl.service
 [Service]
 ExecStart=/usr/bin/docker run --rm --name %n -p 80:8080 192.168.2.90:5000/demo/static-web-3
 ExecStartPost=/usr/bin/etcdctl set /domains/%n/%H running
-ExecStop=/usr/bin/docker stop %n
+ExecStop=/usr/bin/docker kill %n
 ExecStopPost=/usr/bin/etcdctl rm /domains/%n/%H
 
 [X-Fleet]
