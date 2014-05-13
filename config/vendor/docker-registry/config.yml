@@ -39,7 +39,7 @@ common:
 # This is the default configuration when no flavor is specified
 dev:
     storage: local
-    storage_path: /tmp/registry
+    storage_path: /registry
     loglevel: debug
     standalone: true
 

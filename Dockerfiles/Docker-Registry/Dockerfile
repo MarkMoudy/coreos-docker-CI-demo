@@ -3,7 +3,7 @@
 # DESCRIPTION			Docker Registry for hosting Docker images
 # OTHER_INFO			See https://github.com/dotcloud/docker-registry/
 # TO_BUILD				docker build --rm -t 192.168.2.90:5000/moudy/registry .
-# TO_RUN					docker run -p 5000:5000 -v /home/core/share/config/vendor/docker-registry:/registry-conf -v /tmp/registry:/tmp/registry -e DOCKER_REGISTRY_CONFIG=/registry-conf/config.yml 192.168.2.90:5000/moudy/registry
+# TO_RUN					docker run -p 5000:5000 -v /home/core/share/config/vendor/docker-registry:/registry-conf -v /registry:/registry:rw -e DOCKER_REGISTRY_CONFIG=/registry-conf/config.yml 192.168.2.90:5000/moudy/registry
 
 
 FROM ubuntu:13.10
@@ -23,6 +23,8 @@ RUN git clone --depth=50 git://github.com/dotcloud/docker-registry.git /docker-r
 RUN pip install /docker-registry/
 
 ENV DOCKER_REGISTRY_CONFIG /docker-registry/config/config_sample.yml
+
+VOLUME ["/registry"]
 
 EXPOSE 5000
 
