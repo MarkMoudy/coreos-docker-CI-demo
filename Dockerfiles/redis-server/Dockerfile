@@ -15,7 +15,7 @@ RUN sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf
 RUN sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf
 RUN sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
 RUN echo 'vm.overcommit_memory = 1' >> /etc/sysctl.conf
-RUN sysctl vm.overcommit_memory=1
+#RUN sysctl vm.overcommit_memory=1
 
 
 # Define mountable directories

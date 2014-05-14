@@ -1,4 +1,10 @@
+[Unit]
+Description=Redis Server for Ambassador Demo
+Requires=docker.service
+After=docker.service
+After=etcdctl.service
+
 [Service]
 # %n is the name of the unit
 ExecStart=/bin/bash -c "HOST_IP=$(/bin/ifconfig enp0s18 | awk '/inet /{print $2}') && exec /usr/bin/docker run --rm --name %n -p $HOST_IP::6379 192.168.2.90:5000/moudy/redis-server /usr/local/bin/redis-server --bind 0.0.0.0
-ExecStop=/usr/bin/docker stop -t 3 %n
+ExecStop=/usr/bin/docker stop -t %n && /usr/bin/docker rm %n
