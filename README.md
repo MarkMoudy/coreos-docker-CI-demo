@@ -106,6 +106,22 @@ etcdctl get f49b7ee7 /services/ci/jenkins1
 { "host": "core-02", "port": "80" }
 ```
 
+### Disk Space
+Docker uses a union based file system so it only stores the differences of images and containers on the filesystem which is an important part of the layers concept. An example of how much disk space that docker uses on my cluster with most of the images I have built being pushed to the cluster looks like this:
+```bash
+$ sudo du -hsxc share/.vagrant/machines/* 2>/dev/null
+2.6G    share/.vagrant/machines/core-01
+2.3G    share/.vagrant/machines/core-02
+2.6G    share/.vagrant/machines/core-03
+1.1G    share/.vagrant/machines/core-04
+8.0K    share/.vagrant/machines/coreos-alpha
+3.6G    share/.vagrant/machines/docker_registry
+8.0K    share/.vagrant/machines/vmware_fusion
+13G total
+```
+So we can infer from this that with careful pruning of older docker images, cleaning up stopped containers, and using externally mounted volumes for data hungry containers we can do a lot with minimal disk space.  
+See this [blog post](http://blog.thoward37.me/articles/where-are-docker-images-stored/) about where docker stores data. 
+
 #### Notes
 * CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
 
