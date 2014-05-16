@@ -6,8 +6,10 @@ After=etcdctl.service
 After=redis_server.service
 
 [Service]
-ExecStart=/usr/bin/docker run --rm --name %n polvi/simple-amb 172.17.42.1:4001
-ExecStop=/usr/bin/docker stop %n && /usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull polvi/simple-amb
+ExecStart=/usr/bin/docker run --name %n polvi/simple-amb 172.17.42.1:4001
+ExecStop=/usr/bin/docker stop %n
+ExecStopPost=/usr/bin/docker rm %n
 
 [X-Fleet]
 X-ConditionMachineOf=redis_server.service

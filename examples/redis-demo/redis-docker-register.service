@@ -6,10 +6,12 @@ After=etcdctl.service
 After=redis_server.service
 After=etcd-amb-redis.service
 
-
 [Service]
-ExecStart=/usr/bin/docker run --rm --link etcd-amb-redis.service:etcd -v /run/docker.sock:/run/docker.sock -v /usr/bin/etcdctl:/usr/bin/etcdctl  192.168.2.90:5000/moudy/docker-register redis_server.service 6379 redis-A
-ExecStop=/usr/bin/docker stop %n && /usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull 192.168.2.90:5000/moudy/docker-register
+ExecStart=/usr/bin/docker run --link etcd-amb-redis.service:etcd -v /run/docker.sock:/run/docker.sock \
+-v /usr/bin/etcdctl:/usr/bin/etcdctl 192.168.2.90:5000/moudy/docker-register redis_server.service 6379 redis-A
+ExecStop=/usr/bin/docker stop %n
+ExecStopPost=/usr/bin/docker rm %n
 
 [X-Fleet]
 X-ConditionMachineOf=redis_server.service

@@ -6,8 +6,10 @@ After=docker.service
 After=etcd-amb-redis2.service
 
 [Service]
-ExecStart=/usr/bin/docker run --rm --link etcd-amb-redis2.service:etcd  --name redis-dyn-amb.service -p 127.0.0.1::6379 polvi/dynamic-etcd-amb redis-A 6379
-ExecStop=/usr/bin/docker stop %n && /usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull polvi/dynamic-etcd-amb
+ExecStart=/usr/bin/docker run --link etcd-amb-redis2.service:etcd --name redis-dyn-amb.service -p 127.0.0.1::6379 polvi/dynamic-etcd-amb redis-A 6379
+ExecStop=/usr/bin/docker stop --time=10 %n
+ExecStopPost=/usr/bin/docker rm %n
 
 [X-Fleet]
 X-ConditionMachineOf=etcd-amb-redis2.service
