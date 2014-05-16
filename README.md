@@ -1,8 +1,26 @@
-##CoreOS + Docker Development Environment Demo
+#CoreOS + Docker Development Environment Demo
 
 This is a reference environment showing how CoreOS and Docker can be set up in a local environment.  
 
-#### Environment Architecture Diagram 
+<!-- MarkdownTOC depth=0 -->
+
+- Environment Architecture Diagram
+- Environment Setup
+- Examples
+- Simple Getting Started Usage
+    - 1. Starting a container
+    - 2. Pushing a Container to private registry
+    - 3. Creating a container with systemd
+- Ambassadors
+- etcd, systemd, and Fleet
+- Disk Space
+- Notes
+- Tips and Tricks
+- Useful Documentation
+
+<!-- /MarkdownTOC -->
+
+### Environment Architecture Diagram 
 ![Development Environment Architecture Diagram](https://raw.githubusercontent.com/MarkMoudy/coreos-docker-CI-demo/master/Documentation/assets/Environment%20Oveview%20Diagram.png)
 
 ### Environment Setup
@@ -122,17 +140,17 @@ $ sudo du -hsxc share/.vagrant/machines/* 2>/dev/null
 So we can infer from this that with careful pruning of older docker images, cleaning up stopped containers, and using externally mounted volumes for data hungry containers we can do a lot with minimal disk space.  
 See this [blog post](http://blog.thoward37.me/articles/where-are-docker-images-stored/) about where docker stores data. 
 
-#### Notes
+### Notes
 * CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
 
-#### Tips and Tricks
+### Tips and Tricks
 
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
 * Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
 * set both `alias dl='docker ps -l -q'; alias cdel='docker rm $(docker ps -a -q)'`
 
 
-#### Useful Documentation
+### Useful Documentation
 * [Docker Cheat Sheet](https://gist.github.com/wsargent/7049221)
 * [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
 * [fleetctl - Using the client - good list of commands](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
