@@ -4,26 +4,26 @@ This is a reference environment showing how CoreOS and Docker can be set up in a
 
 <!-- MarkdownTOC depth=0 -->
 
-- Environment Architecture Diagram
-- Environment Setup
-- Examples
+- [Environment Architecture Diagram](#env-arch)
+- [Environment Setup](#env-setup)
+- [Examples](#examples)
 - Simple Getting Started Usage
-    - 1. Starting a container
-    - 2. Pushing a Container to private registry
-    - 3. Creating a container with systemd
-- Ambassadors
-- etcd, systemd, and Fleet
-- Disk Space
-- Notes
-- Tips and Tricks
-- Useful Documentation
+    - [1. Starting a container](#starting-container)
+    - [2. Pushing a Container to private registry](#push-to-registry)
+    - [3. Creating a systemd unit file](#creating-systemd-service)
+- [Ambassadors](#ambassadors)
+- [etcd, systemd, and Fleet](#etcd-systemd-fleet)
+- [Disk Space](#disk-space)
+- [Notes](#notes)
+- [Tips and Tricks](#tips-tricks)
+- [Useful Documentation](#useful-links)
 
 <!-- /MarkdownTOC -->
 
-### Environment Architecture Diagram 
+### Environment Architecture Diagram[env-arch]
 ![Development Environment Architecture Diagram](https://raw.githubusercontent.com/MarkMoudy/coreos-docker-CI-demo/master/Documentation/assets/Environment%20Oveview%20Diagram.png)
 
-### Environment Setup
+### Environment Setup[env-setup]
 1. Install [Vagrant 1.5.4+](https://www.vagrantup.com/downloads.html) and either [VirtualBox 4.3.10+](https://www.virtualbox.org) or [VMware Fusion 5.0.4+](http://www.vmware.com/products/fusion) - for VMware you must purchase a license for the [Vagrant Vmware provider plugin](http://www.vagrantup.com/vmware) ~$79.00
 2. Install CoreOS host tools for Fleet and Etcd  
     		
@@ -64,7 +64,7 @@ This is a reference environment showing how CoreOS and Docker can be set up in a
 6. Set fleetctl tunnel environment variable to manage cluster: `FLEETCTL_TUNNEL=127.0.0.1:4001`
 7. Use fleetctl to check for machines in cluster `fleetctl list-machines`
 
-### Examples
+### Examples[examples]
 I have included several demo examples for using a CoreOS cluster. 
 * [Deploying Multiple Static Web Services on a CoreOS cluster](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/examples/screencast-demo)
 * [Deploying Redis on CoreOS using Dynamic Ambassadors Demo](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/examples/redis-demo)
@@ -76,7 +76,7 @@ There are several use cases represented with this demo using Fleetctl and system
 * Creating a container using systemd
 
 
-#### 1. Starting a container
+#### 1. Starting a container[starting-container]
 Once you have the environment setup you can use the fleetctl client to push systemd .service files to the cluster. Fleet is a distributed init system that sits on top of etcd and systemd to make intraction with the cluster easier. There are several systemd unit files located in the [services/](https://github.com/MarkMoudy/coreos-docker-CI-demo/tree/master/services) directory. Start by using fleetctl to push `dillinger.service` to the cluster. 
 ```bash
 $ fleetctl submit services/dillinger.service
@@ -85,10 +85,10 @@ $ fleetctl start dillinger.service
 ``` 
 If you run the command `fleetctl journal dillinger.service` you can see the logs from the container and if you navigate in your browser to the ip address of the node that the service was started on at port 3000(`192.168.2.<replace>:3000`), you will see that dillinger is running. 
 
-#### 2. Pushing a Container to private registry
+#### 2. Pushing a Container to private registry[push-to-registry]
 I have set up a private docker registry running at 192.168.2.90 which should come up when you start the cluster. An important piece of pushing images to a private registry is that you have to tag the Docker image with the ip and port. If you look in the [init-build.sh](https://github.com/MarkMoudy/coreos-docker-CI-demo/blob/master/Dockerfiles/init-build.sh) script you can see the commands to build a jenkins container image from a Dockerfile. 
 
-#### 3. Creating a container with systemd
+#### 3. Creating a systemd unit file[creating-systemd-service]
 Etcd uses [systemd unit files](https://coreos.com/docs/launching-containers/launching/getting-started-with-systemd) to define the service that you are launching. Below is an example of how this would work for the Jenkins container image: 
 ```
 [Unit]
@@ -106,10 +106,10 @@ ExecStopPost=/usr/bin/etcdctl rm /cidemo/%p/%H:%i
 
 `ExecStartPost` - this sets the key/value of the service to etcd and is using modifiers to fill in the path. [More Info](https://coreos.com/docs/launching-containers/launching/getting-started-with-systemd/#advanced-unit-files)
 
-### Ambassadors
+### Ambassadors[ambassadors]
 Ambassadors are containers who's sole purpose is to help connect containers across multiple hosts. See Redis-demo service files for an example.
 
-### etcd, systemd, and Fleet
+### etcd, systemd, and Fleet[etcd-systemd-fleet]
 You can use [sidekick systemd unit files](http://coreos.com/docs/launching-containers/launching/launching-containers-fleet/#run-a-simple-sidekick) to register and de-register services to etcd. Using the Jenkins service as an example, there are two files to inspect `jenkins@8080.1.service` and `jenkins-discovery.1.service`. jenkins-discovery.1.service announces the jenkins service to etcd and removes the key after stopping. Use fleet to start `jenkins@8080.1.service` and `jenkins-discovery.1.service`. Then check etcd with `etcdctl ls --recursive` and you should see something like: 
 ```bash
 $ etcdctl ls --recursive
@@ -124,7 +124,7 @@ etcdctl get f49b7ee7 /services/ci/jenkins1
 { "host": "core-02", "port": "80" }
 ```
 
-### Disk Space
+### Disk Space[disk-space]
 Docker uses a union based file system so it only stores the differences of images and containers on the filesystem which is an important part of the layers concept. An example of how much disk space that docker uses on my cluster with most of the images I have built being pushed to the cluster looks like this:
 ```bash
 $ sudo du -hsxc share/.vagrant/machines/* 2>/dev/null
@@ -140,17 +140,17 @@ $ sudo du -hsxc share/.vagrant/machines/* 2>/dev/null
 So we can infer from this that with careful pruning of older docker images, cleaning up stopped containers, and using externally mounted volumes for data hungry containers we can do a lot with minimal disk space.  
 See this [blog post](http://blog.thoward37.me/articles/where-are-docker-images-stored/) about where docker stores data. 
 
-### Notes
+### Notes[notes]
 * CoreOS has a [Chaos Monkey](https://twitter.com/spkane/status/364969488967401472) deal implemented so the nodes will randomly shut down and kick you out. Use vagrant to reload the node that crashed to get the shared folders back. [Fix](http://coreos.com/docs/cluster-management/debugging/prevent-reboot-after-update/)
 
-### Tips and Tricks
+### Tips and Tricks[tips-tricks]
 
 * Docker - list last used container by setting: `alias dl='docker ps -l -q'`.  Use in any command by replacing containerID with `` `dl` ``
 * Docker - Delete all stopped containers: `alias cdel='docker rm $(docker ps -a -q)'`
 * set both `alias dl='docker ps -l -q'; alias cdel='docker rm $(docker ps -a -q)'`
 
 
-### Useful Documentation
+### Useful Documentation[useful-links]
 * [Docker Cheat Sheet](https://gist.github.com/wsargent/7049221)
 * [fleetctl - Remote Fleet Access configuration with Vagrant](https://github.com/coreos/fleet/blob/master/Documentation/remote-access.md)  
 * [fleetctl - Using the client - good list of commands](https://github.com/coreos/fleet/blob/master/Documentation/using-the-client.md)
