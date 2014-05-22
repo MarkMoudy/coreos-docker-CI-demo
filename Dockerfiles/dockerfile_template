@@ -1,0 +1,11 @@
+#dockerfile_template
+
+# VERSION 				0.1
+# DOCKER_VERSION	0.10.0
+# DESCRIPTION			Docker container for <REPLACEME>
+# TO_BUILD				docker build --rm -t 192.168.2.90:5000/moudy/<REPLACEME> .
+# TO_RUN					docker run -p 80:8080 192.168.2.90:5000/moudy/<REPLACEME>
+
+
+FROM ubuntu:13.10
+MAINTAINER Mark Moudy "mark.moudy@ericsson.com"
